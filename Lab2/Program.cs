@@ -3,7 +3,7 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-        float a, b, c;
+        float a, b;
         do{
             Console.WriteLine("Enter a:");
             a = (float)Convert.ToDouble(Console.ReadLine());
