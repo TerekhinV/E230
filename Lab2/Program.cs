@@ -3,24 +3,42 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-        float a, b;
-        do{
-            Console.WriteLine("Enter a:");
-            a = (float)Convert.ToDouble(Console.ReadLine());
-            Console.WriteLine("Enter b:");
-            b = (float)Convert.ToDouble(Console.ReadLine());
+        float? a, b;
+        bool loopFlag;
 
-            Console.WriteLine("Enter op (+|-|*|/):");
-            string op = Console.ReadLine();
-            Console.Write("Result: ");
-            switch (op){
-                case "+": Console.WriteLine(a+b); break;
-                case "-": Console.WriteLine(a-b); break;
-                case "*": Console.WriteLine(a*b); break;
-                case "/": Console.WriteLine(a/b); break;
-                default: Console.WriteLine("Invalid operator"); break;
-            }
+        do{//main loop
+            do{//continuously grab input until it's valid
+                try{
+                    Console.WriteLine("Enter a:");
+                    a = (float)Convert.ToDouble(Console.ReadLine());
+                } catch {
+                    Console.Write("Invalid input; ");
+                    a = null;
+                }
+            } while (a is null);
+            
+            do{//same for B
+                try{
+                    Console.WriteLine("Enter b:");
+                    b = (float)Convert.ToDouble(Console.ReadLine());
+                } catch {
+                    Console.Write("Invalid input; ");
+                    b = null;
+                }
+            } while (b is null);
+
+            do{//same-ish for operator (implemented differently)
+                loopFlag = false;
+                Console.WriteLine("Enter op (+|-|*|/):");
+                switch (Console.ReadLine() ?? ""){
+                    case "+": Console.WriteLine($"Result: {a+b}"); break;
+                    case "-": Console.WriteLine($"Result: {a-b}"); break;
+                    case "*": Console.WriteLine($"Result: {a*b}"); break;
+                    case "/": Console.WriteLine($"Result: {a/b}"); break;
+                    default: Console.Write("Invalid operator; "); loopFlag = true; break;
+                }
+            } while (loopFlag);
             Console.WriteLine("Exit? (y|n)");
-        } while (Console.ReadLine().Equals("n"));
+        } while ((Console.ReadLine() ?? "").Equals("n")); //check for exit
     }
 }
