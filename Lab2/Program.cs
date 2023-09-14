@@ -1,10 +1,11 @@
 ﻿using System;
+using CalculatorLib;
 internal class Program
 {
     private static void Main(string[] args)
     {
-        double? a, b;
-        bool loopFlag;
+        double a, b, res;
+        Calculator calc = new Calculator();
 
         do{//main loop
             do{//continuously grab input until it's valid
@@ -13,9 +14,9 @@ internal class Program
                     a = (double)Convert.ToDouble(Console.ReadLine());
                 } catch {
                     Console.Write("Invalid input; ");
-                    a = null;
+                    a = double.NaN;
                 }
-            } while (a is null);
+            } while (a == double.NaN);
             
             do{//same for B
                 try{
@@ -23,23 +24,17 @@ internal class Program
                     b = (double)Convert.ToDouble(Console.ReadLine());
                 } catch {
                     Console.Write("Invalid input; ");
-                    b = null;
+                    b = double.NaN;
                 }
-            } while (b is null);
-
-            do{//same-ish for operator (implemented differently)
-                loopFlag = false;
+            } while (b == double.NaN);
+            
+            do{//same but different for op
                 Console.WriteLine("Enter op (+|-|*|/|^|root):");
-                switch (Console.ReadLine() ?? ""){
-                    case "+": Console.WriteLine($"Result: {a+b}"); break;
-                    case "-": Console.WriteLine($"Result: {a-b}"); break;
-                    case "*": Console.WriteLine($"Result: {a*b}"); break;
-                    case "/": Console.WriteLine($"Result: {a/b}"); break;
-                    case "^": Console.WriteLine($"Result: {Math.Pow((double)a, (double)b)}"); break;
-                    case "root": Console.WriteLine($"Result: {Math.Pow((double)a, 1/(double)b)}"); break;
-                    default: Console.Write("Invalid operator; "); loopFlag = true; break;
-                }
-            } while (loopFlag);
+                res = calc.doOp(a, b, Console.ReadLine() ?? "");
+            } while (res == double.NaN);
+            
+            Console.WriteLine($"Result: {res}");
+
             Console.WriteLine("Exit? (y|n)");
         } while ((Console.ReadLine() ?? "").Equals("n")); //check for exit
     }
