@@ -1,13 +1,22 @@
 ﻿namespace CalculatorLib;
 using System;
 using System.Diagnostics;
+using Newtonsoft.Json;
 public class Calculator{
+    JsonWriter writer;
     public Calculator(){
-        StreamWriter logFile = File.CreateText("calc.log");
-        Trace.Listeners.Add(new TextWriterTraceListener(logFile));
-        Trace.AutoFlush = true;
-        Trace.WriteLine("Begin calculator log");
-        Trace.WriteLine(String.Format("Started {0}", System.DateTime.Now.ToString()));
+        StreamWriter logFile = File.CreateText("calculatorlog.json");
+        logFile.AutoFlush = true;
+        writer = new JsonTextWriter(logFile);
+        writer.Formatting = Formatting.Indented;
+        writer.WriteStartObject();
+        writer.WritePropertyName("Operations");
+        writer.WriteStartArray();
+    }
+    public void Finish(){
+        writer.WriteEndArray();
+        writer.WriteEndObject();
+        writer.Close();
     }
     public double doOp(double a, double b, string op){
         double res;
@@ -19,9 +28,18 @@ public class Calculator{
                 case "/":       res = a/b; break;
                 case "^":       res = Math.Pow(a, b); break;
                 case "root":    res = Math.Pow(a, 1/b); break;
-                default:        Trace.WriteLine("Operation not supported"); return double.NaN;
+                default:        return double.NaN;
             }
-            Trace.WriteLine(String.Format("{0} {3} {1} = {2}", a, b, res, op));
+            writer.WriteStartObject();
+            writer.WritePropertyName("Operand1");
+            writer.WriteValue(a);
+            writer.WritePropertyName("Operand2");
+            writer.WriteValue(b);
+            writer.WritePropertyName("Operation");
+            writer.WriteValue(op);
+            writer.WritePropertyName("Result");
+            writer.WriteValue(res);
+            writer.WriteEndObject();
             return res;
         }catch{return double.NaN;}
     }

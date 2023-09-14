@@ -7,6 +7,7 @@ internal class Program
         double a, b, res;
         Calculator calc = new Calculator();
 
+        Console.WriteLine("C# console calculator\n");
         do{//main loop
             do{//continuously grab input until it's valid
                 try{
@@ -16,7 +17,7 @@ internal class Program
                     Console.Write("Invalid input; ");
                     a = double.NaN;
                 }
-            } while (a == double.NaN);
+            } while (Double.IsNaN(a));
             
             do{//same for B
                 try{
@@ -26,16 +27,19 @@ internal class Program
                     Console.Write("Invalid input; ");
                     b = double.NaN;
                 }
-            } while (b == double.NaN);
+            } while (Double.IsNaN(b));
             
-            do{//same but different for op
+            while(true){//same but different for op
                 Console.WriteLine("Enter op (+|-|*|/|^|root):");
                 res = calc.doOp(a, b, Console.ReadLine() ?? "");
-            } while (res == double.NaN);
+                if (!Double.IsNaN(res)) break;
+                Console.Write("Invalid input; ");
+            }
             
             Console.WriteLine($"Result: {res}");
 
             Console.WriteLine("Exit? (y|n)");
         } while ((Console.ReadLine() ?? "").Equals("n")); //check for exit
+        calc.Finish();
     }
 }
