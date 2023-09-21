@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34024.191
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab1", "Lab1\Lab1.csproj", "{384C5818-3453-4211-9768-6E28ED31BF59}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lab1", "Lab1\Lab1.csproj", "{384C5818-3453-4211-9768-6E28ED31BF59}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab2", "Lab2\Lab2.csproj", "{B241912F-1493-4F4C-BDDE-CEEBCC5E226C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lab2", "Lab2\Lab2.csproj", "{B241912F-1493-4F4C-BDDE-CEEBCC5E226C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CalculatorLib", "CalculatorLib\CalculatorLib.csproj", "{C32371A7-4697-4512-8A0F-F34943A78A90}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CalculatorLib", "CalculatorLib\CalculatorLib.csproj", "{C32371A7-4697-4512-8A0F-F34943A78A90}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab3", "Lab3\Lab3.csproj", "{76FD499C-20DA-4D78-B2F6-D060C47C0A5D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lab3", "Lab3\Lab3.csproj", "{76FD499C-20DA-4D78-B2F6-D060C47C0A5D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +31,7 @@ Global
 		{C32371A7-4697-4512-8A0F-F34943A78A90}.Release|Any CPU.Build.0 = Release|Any CPU
 		{76FD499C-20DA-4D78-B2F6-D060C47C0A5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{76FD499C-20DA-4D78-B2F6-D060C47C0A5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76FD499C-20DA-4D78-B2F6-D060C47C0A5D}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{76FD499C-20DA-4D78-B2F6-D060C47C0A5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{76FD499C-20DA-4D78-B2F6-D060C47C0A5D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
