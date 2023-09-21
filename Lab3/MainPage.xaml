@@ -8,32 +8,54 @@
             Spacing="25"
             Padding="30,0"
             VerticalOptions="Center">
-
-            <Image
-                Source="dotnet_bot.png"
-                SemanticProperties.Description="Cute dot net bot waving hi to you!"
-                HeightRequest="200"
-                HorizontalOptions="Center" />
-
             <Label
-                Text="Hello, World!"
+                Text="Basic calculator app"
                 SemanticProperties.HeadingLevel="Level1"
                 FontSize="32"
                 HorizontalOptions="Center" />
+            <HorizontalStackLayout>
+                <Entry
+                    HorizontalTextAlignment="End"
+                    Placeholder="Number A"
+                />
+                <Entry
+                    HorizontalTextAlignment="Start"
+                    Placeholder="Number B"
+                />
+            </HorizontalStackLayout>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
-            <Label
-                Text="Welcome to .NET Multi-platform App UI"
-                SemanticProperties.HeadingLevel="Level2"
-                SemanticProperties.Description="Welcome to dot net Multi platform App U I"
-                FontSize="18"
-                HorizontalOptions="Center" />
-
-            <Button
-                x:Name="CounterBtn"
-                Text="Click me"
-                SemanticProperties.Hint="Counts the number of times you click"
-                Clicked="OnCounterClicked"
-                HorizontalOptions="Center" />
+                <Button Text="+"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    Clicked="OnButtonClicked" />
+                <Button Text="-"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    Clicked="OnButtonClicked" />
+                <Button Text="="
+                    Grid.RowSpan="2"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    Clicked="OnButtonClicked" />
+                <Button Text="*"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    Clicked="OnButtonClicked" />
+                <Button Text="/"
+                    VerticalOptions="Center"
+                    HorizontalOptions="Center"
+                    Clicked="OnButtonClicked" />
+            </Grid>
 
         </VerticalStackLayout>
     </ScrollView>
