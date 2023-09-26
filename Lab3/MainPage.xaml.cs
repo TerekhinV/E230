@@ -9,22 +9,18 @@ public partial class MainPage : ContentPage
 
     private void OperatorClicked(object s, EventArgs e)
     {
-        op.Text = (s as Button).Text;
+        
     }
     private void Evaluate(object s, EventArgs e)
     {
-        double a, b, o;
-        if (!double.TryParse(numA.Text, out a))
+        if (inp.Text == "42")
         {
-            output.Text = "Failed to parse input A";
-            return;
+            output.Text = "The Answer"; return;
         }
-        if (!double.TryParse(numB.Text, out b))
+        try
         {
-            output.Text = "Failed to parse input B";
-            return;
+            output.Text = Calculator.evaluate(inp.Text).ToString();
         }
-        o = Calculator.doOp(a, b, op.Text);
-        output.Text = double.IsNaN(o) ? "Operation error" : o.ToString();
+        catch (Exception ex) { output.Text = ex.Message; }
     }
 }

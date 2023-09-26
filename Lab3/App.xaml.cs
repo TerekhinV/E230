@@ -12,7 +12,7 @@ public partial class App : Application
     {
         Window window = base.CreateWindow(activationState);
 
-        window.Width = 400;
+        window.Width = 600;
         window.Height = 600;
 
         return window;

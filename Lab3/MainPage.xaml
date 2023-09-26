@@ -13,34 +13,18 @@
                 FontSize="32"
                 HorizontalOptions="Center"
                 SemanticProperties.HeadingLevel="Level1"
-                Text="Basic calculator app" />
+                Text="Advanced calculator app" />
             <FlexLayout
                 AlignContent="Stretch"
                 HorizontalOptions="FillAndExpand"
                 JustifyContent="SpaceEvenly">
                 <Entry
-                    x:Name="numA"
-                    FlexLayout.Grow="1"
-                    FontSize="24"
-                    HorizontalOptions="FillAndExpand"
-                    HorizontalTextAlignment="End"
-                    Placeholder="Number A" />
-                <Label
-                    x:Name="op"
-                    Padding="4"
-                    FontSize="24"
-                    HorizontalTextAlignment="Center"
-                    SemanticProperties.HeadingLevel="Level1"
-                    Text="+"
-                    VerticalOptions="Center"
-                    WidthRequest="40" />
-                <Entry
-                    x:Name="numB"
+                    x:Name="inp"
                     FlexLayout.Grow="1"
                     FontSize="24"
                     HorizontalOptions="FillAndExpand"
                     HorizontalTextAlignment="Start"
-                    Placeholder="Number B" />
+                    Placeholder="Expression" />
             </FlexLayout>
             <Grid
                 HeightRequest="100"
@@ -48,75 +32,14 @@
                 VerticalOptions="Start">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
-                    <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
                 <Button
                     Grid.Row="0"
                     Grid.Column="0"
-                    Clicked="OperatorClicked"
-                    FontSize="32"
-                    HorizontalOptions="Fill"
-                    Text="+"
-                    TextColor="Black"
-                    VerticalOptions="Fill" />
-                <Button
-                    Grid.Row="0"
-                    Grid.Column="1"
-                    Clicked="OperatorClicked"
-                    FontSize="32"
-                    HorizontalOptions="Fill"
-                    Text="-"
-                    TextColor="Black"
-                    VerticalOptions="Fill" />
-                <Button
-                    Grid.Row="1"
-                    Grid.Column="0"
-                    Clicked="OperatorClicked"
-                    FontSize="32"
-                    HorizontalOptions="Fill"
-                    Text="*"
-                    TextColor="Black"
-                    VerticalOptions="Fill" />
-                <Button
-                    Grid.Row="1"
-                    Grid.Column="1"
-                    Clicked="OperatorClicked"
-                    FontSize="32"
-                    HorizontalOptions="Fill"
-                    Text="/"
-                    TextColor="Black"
-                    VerticalOptions="Fill" />
-
-                <Button
-                    Grid.Row="0"
-                    Grid.Column="2"
-                    Clicked="OperatorClicked"
-                    FontSize="32"
-                    HorizontalOptions="Fill"
-                    Text="^"
-                    TextColor="Black"
-                    VerticalOptions="Fill" />
-                <Button
-                    Grid.Row="1"
-                    Grid.Column="2"
-                    Clicked="OperatorClicked"
-                    FontSize="32"
-                    HorizontalOptions="Fill"
-                    Text="√"
-                    TextColor="Black"
-                    VerticalOptions="Fill" />
-
-                <Button
-                    Grid.Row="0"
-                    Grid.RowSpan="2"
-                    Grid.Column="3"
                     Clicked="Evaluate"
                     FontSize="32"
                     HorizontalOptions="Fill"
