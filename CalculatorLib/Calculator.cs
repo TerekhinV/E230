@@ -21,14 +21,19 @@ public class Calculator{
                 case "cos":     res = Math.Cos(a); break;
                 case "tan":     res = Math.Tan(a); break;
                 case "abs":     res = Math.Abs(a); break;
+                case "ln":      res = Math.Log(a); break;
+                case "log":     res = Math.Log10(a); break;
+                case "round":   res = Math.Round(a); break;
+                case "floor":   res = Math.Floor(a); break;
+                case "ceil":    res = Math.Ceiling(a); break;
                 default:        return double.NaN;
             }
             return res;
         }catch{return double.NaN;}
     }
     public static double evaluate(string eq){
-        //                         //split   symbols   numbers           constants//
-        Regex tokenizer = new Regex("(?<=[\\-)(+=/*^ ]|[0-9.]+(?![0-9.])|pi|e)"); //ooh boy here we go: regex to split equation string by token. groups numbers, function names, constants, and/or individual symbols from there
+        //                         //split   symbols   numbers           constants but not functions//
+        Regex tokenizer = new Regex("(?<=[\\-)(+=/*^ ]|[0-9.]+(?![0-9.])|pi(?![a-z0-9])|e(?![a-z0-9]))");
         List<string> tokens = new List<string>(tokenizer.Split(eq));
 
         bool expValue = true; //setup things to do evaluating
@@ -81,23 +86,24 @@ public class Calculator{
                     case "*":
                     case "/":
                     case "^":
-                        while (ops.TryPeek(out op) && precedes(token, op))
+                        while (ops.TryPeek(out op) && precedes(token, op)) //if new operator has lower or equal precedence, collapse whatever's before it
                         {
                             collapse(ops.Pop(), vals);
                         }
                          ops.Push(token); expValue = true;
                         break;
-                    default:
+                    default: //unexpected
                         throw new Exception("Failed to parse equation: expected an operator or end of subexpression, instead found '" + token + "'");
                 }
             }
         }
-        while (ops.TryPeek(out op)) //final collapse
+        while (ops.TryPop(out op)) //final collapse. Catches unclosed brackets.
         {
-            collapse(ops.Pop(), vals);
+            if (op.EndsWith("(")) throw new Exception("Failed to evaluate expression: unclosed bracket");
+            collapse(op, vals);
         }
         double res;
-        if (vals.TryPop(out res))
+        if (vals.TryPop(out res)) //final checks to make sure function evaluated correctly
         {
             if (vals.Count == 0)
             {
@@ -107,7 +113,7 @@ public class Calculator{
                 }
                 else throw new Exception("Failed to evaluate equation: leftover operators in stack");
             }
-            else throw new Exception("Failed to evaluate equation: too many leftover values in stack");
+            else throw new Exception("Failed to evaluate equation: leftover values in stack");
         }
         else throw new Exception("Failed to evaluate equation: no result value in stack");
     }
@@ -134,6 +140,11 @@ public class Calculator{
             case "cos":
             case "tan":
             case "abs":
+            case "ln":
+            case "log":
+            case "round":
+            case "floor":
+            case "ceil":
                 if (!vals.TryPop(out buf)) throw new Exception("failed to complete operation '" + op + "': insufficient operands"); //preeeeety sure any insufficient operand problems should be caught beforehand but in case they're not here's a backup
                 vals.Push(doOp(buf, 0, op));
                 break;
