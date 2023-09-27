@@ -24,29 +24,9 @@
                     FontSize="24"
                     HorizontalOptions="FillAndExpand"
                     HorizontalTextAlignment="Start"
-                    Placeholder="Expression" />
+                    Placeholder="Expression"
+                    TextChanged="Evaluate" />
             </FlexLayout>
-            <Grid
-                HeightRequest="100"
-                HorizontalOptions="Fill"
-                VerticalOptions="Start">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-
-                <Button
-                    Grid.Row="0"
-                    Grid.Column="0"
-                    Clicked="Evaluate"
-                    FontSize="32"
-                    HorizontalOptions="Fill"
-                    Text="="
-                    TextColor="Black"
-                    VerticalOptions="Fill" />
-            </Grid>
             <Border>
                 <Label
                     x:Name="output"

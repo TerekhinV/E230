@@ -23,7 +23,7 @@ public class Calculator{
                 case "abs":     res = Math.Abs(a); break;
                 case "ln":      res = Math.Log(a); break;
                 case "log":     res = Math.Log10(a); break;
-                case "round":   res = Math.Round(a); break;
+                case "round":   res = Math.Round(a, MidpointRounding.ToPositiveInfinity); break; //so turns out by default .5 is rounded to the nearest even number
                 case "floor":   res = Math.Floor(a); break;
                 case "ceil":    res = Math.Ceiling(a); break;
                 default:        return double.NaN;

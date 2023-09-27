@@ -7,10 +7,6 @@ public partial class MainPage : ContentPage
 		InitializeComponent();
 	}
 
-    private void OperatorClicked(object s, EventArgs e)
-    {
-        
-    }
     private void Evaluate(object s, EventArgs e)
     {
         if (inp.Text == "42")
