@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="Lab6.MainPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:drawable="clr-namespace:Lab6">
+    <ContentPage.Resources>
+        <drawable:GraphicsDrawable x:Key="drawable" />
+    </ContentPage.Resources>
+    <Grid HorizontalOptions="Fill" VerticalOptions="Fill">
+        <Grid.RowDefinitions>
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <GraphicsView
+            x:Name="canvas"
+            Drawable="{StaticResource drawable}"
+            HorizontalOptions="Fill"
+            VerticalOptions="Fill" />
+        <VerticalStackLayout>
+            <FlexLayout
+                AlignItems="Center"
+                HeightRequest="50"
+                JustifyContent="SpaceEvenly">
+                <Label Text="#Balls" />
+                <Entry x:Name="nBalls" Text="1000" />
+                <Label Text="FPS Target" />
+                <Entry x:Name="fps" Text="60" />
+                <Label Text="Speed multiplier" />
+                <Entry x:Name="spMult" Text="1" />
+                <Button Clicked="updateValues" Text="Fire" />
+                <Label
+                    x:Name="status"
+                    FlexLayout.Grow="1"
+                    HorizontalTextAlignment="End"
+                    Text="..." />
+
+            </FlexLayout>
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>
