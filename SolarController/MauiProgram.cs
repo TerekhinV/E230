@@ -13,6 +13,7 @@ namespace SolarController
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                    fonts.AddFont("lucon.ttf", "Lucida Console Regular");
                 });
 
 #if DEBUG

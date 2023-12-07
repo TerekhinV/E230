@@ -1,4 +1,5 @@
 ﻿using Microsoft.UI.Xaml.Media.Animation;
+using Microsoft.VisualBasic;
 using System.IO.Ports;
 using System.Text;
 
@@ -7,12 +8,14 @@ namespace SolarController
     public partial class MainPage : ContentPage
     {
         private Serial s;
+        private Solar sol;
         private int seq, a0, a1, a2, a3, a4, a5, bin, chk;
 
         public MainPage()
         {
             InitializeComponent();
             s = new Serial();
+            sol = new Solar(100, 220, 220);
             s.RXcallback += receiveCallback;
         }
         public void buttonRefreshPortsClicked(object sender, EventArgs e) {
@@ -44,6 +47,7 @@ namespace SolarController
             {
                 s.connect();
                 connectButton.Text = "Disconnect";
+                updateLights(null, null);
             }
         }
         public void buttonTXclicked(object sender, EventArgs e)
@@ -95,12 +99,56 @@ namespace SolarController
             A05.Text = a5.ToString();
             BIN.Text = $"{bin:D4}";
             CHK.Text = chk.ToString();
+
+            sol.calc(a0, a1, a2, a3, a4); //TODO
+
+            V_pv.Text = $"{sol.Vpv:0.000}V";
+            V_bat.Text = $"{sol.Vbat:0.000}V";
+            V_bus.Text = $"{sol.Vbus:0.000}V";
+            V_L0.Text = $"{sol.Vl0:0.000}V";
+            V_L1.Text = $"{sol.Vl1:0.000}V";
+
+            I_pv.Text = $"{sol.Ipv * 1000:00.00}mA";
+            I_bat.Text = $"{sol.Ibat * 1000:00.00}mA";
+            I_L0.Text = $"{sol.Il0 * 1000:00.00}mA";
+            I_L1.Text = $"{sol.Il1 * 1000:00.00}mA";
+        }
+        public void updateLights(object sender, EventArgs e)
+        {
+            if (sender is not null) { ((Button)sender).Text = (((Button)sender).Text == "On") ? "Off" : "On"; }
+            string tmp = "";
+            tmp += (L0.Text == "On") ? 0 : 1;
+            tmp += (L1.Text == "On") ? 0 : 1;
+            tmp += (L2.Text == "On") ? 0 : 1;
+            tmp += (L3.Text == "On") ? 0 : 1;
+            if (s.connected) setLights(tmp);
+        }
+
+        public void setLights(string inp)
+        {
+            int chk = 0;
+            for (int i = 0; i < 4; i++) chk += (byte)inp[i];
+            Thread updater = new Thread(()=>updateLoop(inp, $"###{inp}{chk:D3}\r\n"));
+            updater.Start();
+        }
+        private void updateLoop(string raw, string msg)
+        {
+            do
+            {
+                s.send(msg);
+                log("TX: " + msg);
+                Thread.Sleep(500);
+            } while (s.connected && BIN.Text != raw);
         }
 
         private void log(string message)
         {
-            logWindow.Text += message + "\n";
-            if (logWindow.Text.Length > 20000) logWindow.Text = logWindow.Text.Substring(10000, logWindow.Text.Length - 10000); //overflow prevention
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                if (!message.EndsWith("\n")) message += "\n";
+                logWindow.Text += message;
+                if (logWindow.Text.Length > 20000) logWindow.Text = logWindow.Text.Substring(10000, logWindow.Text.Length - 10000); //overflow prevention
+            });
         }
     }
     class Serial
@@ -143,6 +191,32 @@ namespace SolarController
         {
             byte[] m = Encoding.UTF8.GetBytes(msg);
             port.Write(m, 0, m.Length);
+        }
+    }
+
+    class Solar
+    {
+        public double Vpv, Vbus, Vbat, Vl0, Vl1, Ipv, Ibat, Il0, Il1;
+        private double Rbat, Rl0, Rl1;
+
+        public Solar(double Rbat, double Rl0, double Rl1) {
+            this.Rbat = Rbat;
+            this.Rl0 = Rl0;
+            this.Rl1 = Rl1;
+        }
+        public Solar calc(int a0, int a1, int a2, int a3, int a4)
+        {
+            Vpv = a0 / 1000.0;
+            Vbus = a1 / 1000.0;
+            Vbat = a2 / 1000.0;
+            Vl0 = a3 / 1000.0;
+            Vl1 = a4 / 1000.0;
+
+            Ibat = (Vbus - Vbat) / Rbat;
+            Il0 = (Vbus - Vl0) / Rl0;
+            Il1 = (Vbus - Vl1) / Rl1;
+            Ipv = Il0 + Il1 + Ibat;
+            return this;
         }
     }
 }

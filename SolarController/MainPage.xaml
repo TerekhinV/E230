@@ -14,8 +14,18 @@
             <Setter Property="VerticalOptions" Value="FillAndExpand" />
             <Setter Property="Spacing" Value="5" />
         </Style>
+        <Style TargetType="Grid">
+            <Setter Property="RowSpacing" Value="5" />
+            <Setter Property="ColumnSpacing" Value="5" />
+        </Style>
+        <Style TargetType="Label">
+            <Setter Property="FontFamily" Value="Lucida Console Regular" />
+        </Style>
+        <Style TargetType="Button">
+            <Setter Property="FontFamily" Value="Lucida Console Regular" />
+        </Style>
     </ContentPage.Resources>
-    <Grid>
+    <Grid Margin="5">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
@@ -33,42 +43,47 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <!--  serial/controller division  -->
-            <HorizontalStackLayout>
+            <VerticalStackLayout>
                 <!--  ctrl window  -->
-                <VerticalStackLayout>
+                <HorizontalStackLayout>
                     <!--  title, status  -->
-                    <Label Text="CTRL" />
+                    <Label FontSize="Header" Text="CTRL" />
                     <!--<Image Source="" />-->
-                </VerticalStackLayout>
+                </HorizontalStackLayout>
                 <Grid>
                     <!--  buttons  -->
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
 
                     <Button
-                        Grid.Row="0"
+                        x:Name="L0"
                         Grid.Column="0"
-                        Text="O" />
+                        Clicked="updateLights"
+                        Text="Off" />
                     <Button
-                        Grid.Row="0"
+                        x:Name="L1"
                         Grid.Column="1"
-                        Text="O" />
+                        Clicked="updateLights"
+                        Text="Off" />
                     <Button
-                        Grid.Row="1"
-                        Grid.Column="0"
-                        Text="O" />
+                        x:Name="L2"
+                        Grid.Column="2"
+                        Clicked="updateLights"
+                        Text="Off" />
                     <Button
-                        Grid.Row="1"
-                        Grid.Column="1"
-                        Text="O" />
+                        x:Name="L3"
+                        Grid.Column="3"
+                        Clicked="updateLights"
+                        Text="Off" />
                 </Grid>
-            </HorizontalStackLayout>
+            </VerticalStackLayout>
             <Grid Grid.Column="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="200" />
@@ -79,7 +94,7 @@
                 </Grid.RowDefinitions>
                 <!--  serial window  -->
                 <VerticalStackLayout>
-                    <Label Text="COMM" />
+                    <Label FontSize="Header" Text="COMM" />
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
@@ -137,92 +152,202 @@
         </Grid>
         <HorizontalStackLayout Grid.Row="1">
             <VerticalStackLayout>
-                <Label Text="STAT" />
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="20" />
-                        <RowDefinition Height="20" />
-                        <RowDefinition Height="20" />
-                        <RowDefinition Height="20" />
-                        <RowDefinition Height="20" />
-                        <RowDefinition Height="20" />
-                        <RowDefinition Height="20" />
-                        <RowDefinition Height="20" />
-                        <RowDefinition Height="20" />
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="50" />
-                        <ColumnDefinition Width="50" />
-                    </Grid.ColumnDefinitions>
+                <Label FontSize="Header" Text="STAT" />
+                <HorizontalStackLayout Spacing="20">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="20" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50" />
+                            <ColumnDefinition Width="50" />
+                        </Grid.ColumnDefinitions>
 
-                    <Label Grid.Row="0" Text="SEQ" />
-                    <Label Grid.Row="1" Text="A00" />
-                    <Label Grid.Row="2" Text="A01" />
-                    <Label Grid.Row="3" Text="A02" />
-                    <Label Grid.Row="4" Text="A03" />
-                    <Label Grid.Row="5" Text="A04" />
-                    <Label Grid.Row="6" Text="A05" />
-                    <Label Grid.Row="7" Text="BIN" />
-                    <Label Grid.Row="8" Text="CHK" />
+                        <Label Grid.Row="0" Text="SEQ" />
+                        <Label Grid.Row="1" Text="A00" />
+                        <Label Grid.Row="2" Text="A01" />
+                        <Label Grid.Row="3" Text="A02" />
+                        <Label Grid.Row="4" Text="A03" />
+                        <Label Grid.Row="5" Text="A04" />
+                        <Label Grid.Row="6" Text="A05" />
+                        <Label Grid.Row="7" Text="BIN" />
+                        <Label Grid.Row="8" Text="CHK" />
 
-                    <Label
-                        x:Name="SEQ"
-                        Grid.Row="0"
-                        Grid.Column="1" />
-                    <Label
-                        x:Name="A00"
-                        Grid.Row="1"
-                        Grid.Column="1" />
-                    <Label
-                        x:Name="A01"
-                        Grid.Row="2"
-                        Grid.Column="1" />
-                    <Label
-                        x:Name="A02"
-                        Grid.Row="3"
-                        Grid.Column="1" />
-                    <Label
-                        x:Name="A03"
-                        Grid.Row="4"
-                        Grid.Column="1" />
-                    <Label
-                        x:Name="A04"
-                        Grid.Row="5"
-                        Grid.Column="1" />
-                    <Label
-                        x:Name="A05"
-                        Grid.Row="6"
-                        Grid.Column="1" />
-                    <Label
-                        x:Name="BIN"
-                        Grid.Row="7"
-                        Grid.Column="1" />
-                    <Label
-                        x:Name="CHK"
-                        Grid.Row="8"
-                        Grid.Column="1" />
-                </Grid>
+                        <Label
+                            x:Name="SEQ"
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            HorizontalOptions="End" />
+                        <Label
+                            x:Name="A00"
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            HorizontalOptions="End" />
+                        <Label
+                            x:Name="A01"
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            HorizontalOptions="End" />
+                        <Label
+                            x:Name="A02"
+                            Grid.Row="3"
+                            Grid.Column="1"
+                            HorizontalOptions="End" />
+                        <Label
+                            x:Name="A03"
+                            Grid.Row="4"
+                            Grid.Column="1"
+                            HorizontalOptions="End" />
+                        <Label
+                            x:Name="A04"
+                            Grid.Row="5"
+                            Grid.Column="1"
+                            HorizontalOptions="End" />
+                        <Label
+                            x:Name="A05"
+                            Grid.Row="6"
+                            Grid.Column="1"
+                            HorizontalOptions="End" />
+                        <Label
+                            x:Name="BIN"
+                            Grid.Row="7"
+                            Grid.Column="1"
+                            HorizontalOptions="End" />
+                        <Label
+                            x:Name="CHK"
+                            Grid.Row="8"
+                            Grid.Column="1"
+                            HorizontalOptions="End" />
+                    </Grid>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="20" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50" />
+                            <ColumnDefinition Width="70" />
+                        </Grid.ColumnDefinitions>
+
+                        <Label Grid.Row="0" Text="V_pv" />
+                        <Label Grid.Row="1" Text="V_bus" />
+                        <Label Grid.Row="2" Text="V_bat" />
+                        <Label Grid.Row="3" Text="V_L0" />
+                        <Label Grid.Row="4" Text="V_L1" />
+                        <!--  break  -->
+                        <Label Grid.Row="6" Text="I_pv" />
+                        <Label Grid.Row="7" Text="I_bat" />
+                        <Label Grid.Row="8" Text="I_L0" />
+                        <Label Grid.Row="9" Text="I_L1" />
+
+
+                        <Label
+                            x:Name="V_pv"
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            HorizontalOptions="End" />
+                        <Label
+                            x:Name="V_bus"
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            HorizontalOptions="End" />
+                        <Label
+                            x:Name="V_bat"
+                            Grid.Row="2"
+                            Grid.Column="1"
+                            HorizontalOptions="End" />
+                        <Label
+                            x:Name="V_L0"
+                            Grid.Row="3"
+                            Grid.Column="1"
+                            HorizontalOptions="End" />
+                        <Label
+                            x:Name="V_L1"
+                            Grid.Row="4"
+                            Grid.Column="1"
+                            HorizontalOptions="End" />
+                        <!--  break  -->
+                        <Label
+                            x:Name="I_pv"
+                            Grid.Row="6"
+                            Grid.Column="1"
+                            HorizontalOptions="End" />
+                        <Label
+                            x:Name="I_bat"
+                            Grid.Row="7"
+                            Grid.Column="1"
+                            HorizontalOptions="End" />
+                        <Label
+                            x:Name="I_L0"
+                            Grid.Row="8"
+                            Grid.Column="1"
+                            HorizontalOptions="End" />
+                        <Label
+                            x:Name="I_L1"
+                            Grid.Row="9"
+                            Grid.Column="1"
+                            HorizontalOptions="End" />
+                    </Grid>
+                </HorizontalStackLayout>
             </VerticalStackLayout>
             <VerticalStackLayout>
-                <Label Text="GRPH" />
-                <HorizontalStackLayout>
-                    <HorizontalStackLayout>
+                <Label FontSize="Header" Text="GRPH" />
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="300" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
                         <GraphicsView />
-                        <TableView>
+                        <TableView Grid.Column="1">
                             <TableRoot>
                                 <TableSection />
                             </TableRoot>
                         </TableView>
-                    </HorizontalStackLayout>
-                    <HorizontalStackLayout>
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="300" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
                         <GraphicsView />
-                        <TableView>
+                        <TableView Grid.Column="1">
                             <TableRoot>
                                 <TableSection />
                             </TableRoot>
                         </TableView>
-                    </HorizontalStackLayout>
-                </HorizontalStackLayout>
+                    </Grid>
+                </Grid>
             </VerticalStackLayout>
         </HorizontalStackLayout>
     </Grid>
