@@ -15,9 +15,23 @@
             <Setter Property="Spacing" Value="5" />
         </Style>
     </ContentPage.Resources>
-    <VerticalStackLayout>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="300" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
         <!--  window  -->
-        <HorizontalStackLayout>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
             <!--  serial/controller division  -->
             <HorizontalStackLayout>
                 <!--  ctrl window  -->
@@ -55,37 +69,138 @@
                         Text="O" />
                 </Grid>
             </HorizontalStackLayout>
-            <HorizontalStackLayout>
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
                 <!--  serial window  -->
                 <VerticalStackLayout>
                     <Label Text="COMM" />
-                    <HorizontalStackLayout>
-                        <Picker />
-                        <Button Text="R" />
-                    </HorizontalStackLayout>
-                    <Button Text="No port selected" />
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="50" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Picker
+                            x:Name="serialDropdown"
+                            HorizontalOptions="Fill"
+                            MaximumWidthRequest="100"
+                            SelectedIndexChanged="serialDropdownUpdated" />
+                        <Button
+                            Grid.Column="1"
+                            Clicked="buttonRefreshPortsClicked"
+                            Text="R" />
+                    </Grid>
+                    <Button
+                        x:Name="connectButton"
+                        Clicked="buttonPortConnectClicked"
+                        Text="No port selected" />
                 </VerticalStackLayout>
-                <VerticalStackLayout>
+                <Grid Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="50" />
+                    </Grid.RowDefinitions>
                     <ScrollView>
-                        <Label Text="Log&#10;log&#10;log&#10;log&#10;log" />
+                        <Label x:Name="logWindow" Text="" />
                     </ScrollView>
-                    <HorizontalStackLayout>
-                        <Entry />
-                        <Button Text="Send" />
-                    </HorizontalStackLayout>
-                </VerticalStackLayout>
-            </HorizontalStackLayout>
-        </HorizontalStackLayout>
-        <HorizontalStackLayout>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="100" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Entry
+                            x:Name="TXentry"
+                            HorizontalOptions="Fill"
+                            Text="###0000192" />
+                        <Button
+                            Grid.Column="1"
+                            Clicked="buttonTXclicked"
+                            HorizontalOptions="Fill"
+                            Text="Send" />
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Grid>
+        <HorizontalStackLayout Grid.Row="1">
             <VerticalStackLayout>
                 <Label Text="STAT" />
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="*" />
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="20" />
+                        <RowDefinition Height="20" />
                     </Grid.RowDefinitions>
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="50" />
+                        <ColumnDefinition Width="50" />
                     </Grid.ColumnDefinitions>
+
+                    <Label Grid.Row="0" Text="SEQ" />
+                    <Label Grid.Row="1" Text="A00" />
+                    <Label Grid.Row="2" Text="A01" />
+                    <Label Grid.Row="3" Text="A02" />
+                    <Label Grid.Row="4" Text="A03" />
+                    <Label Grid.Row="5" Text="A04" />
+                    <Label Grid.Row="6" Text="A05" />
+                    <Label Grid.Row="7" Text="BIN" />
+                    <Label Grid.Row="8" Text="CHK" />
+
+                    <Label
+                        x:Name="SEQ"
+                        Grid.Row="0"
+                        Grid.Column="1" />
+                    <Label
+                        x:Name="A00"
+                        Grid.Row="1"
+                        Grid.Column="1" />
+                    <Label
+                        x:Name="A01"
+                        Grid.Row="2"
+                        Grid.Column="1" />
+                    <Label
+                        x:Name="A02"
+                        Grid.Row="3"
+                        Grid.Column="1" />
+                    <Label
+                        x:Name="A03"
+                        Grid.Row="4"
+                        Grid.Column="1" />
+                    <Label
+                        x:Name="A04"
+                        Grid.Row="5"
+                        Grid.Column="1" />
+                    <Label
+                        x:Name="A05"
+                        Grid.Row="6"
+                        Grid.Column="1" />
+                    <Label
+                        x:Name="BIN"
+                        Grid.Row="7"
+                        Grid.Column="1" />
+                    <Label
+                        x:Name="CHK"
+                        Grid.Row="8"
+                        Grid.Column="1" />
                 </Grid>
             </VerticalStackLayout>
             <VerticalStackLayout>
@@ -110,6 +225,6 @@
                 </HorizontalStackLayout>
             </VerticalStackLayout>
         </HorizontalStackLayout>
-    </VerticalStackLayout>
+    </Grid>
 
 </ContentPage>
