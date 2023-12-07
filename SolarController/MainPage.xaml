@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    x:Class="SolarController.MainPage"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    <ContentPage.Resources>
+        <Style TargetType="VerticalStackLayout">
+            <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+            <Setter Property="VerticalOptions" Value="FillAndExpand" />
+            <Setter Property="Spacing" Value="5" />
+        </Style>
+        <Style TargetType="HorizontalStackLayout">
+            <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+            <Setter Property="VerticalOptions" Value="FillAndExpand" />
+            <Setter Property="Spacing" Value="5" />
+        </Style>
+    </ContentPage.Resources>
+    <VerticalStackLayout>
+        <!--  window  -->
+        <HorizontalStackLayout>
+            <!--  serial/controller division  -->
+            <HorizontalStackLayout>
+                <!--  ctrl window  -->
+                <VerticalStackLayout>
+                    <!--  title, status  -->
+                    <Label Text="CTRL" />
+                    <!--<Image Source="" />-->
+                </VerticalStackLayout>
+                <Grid>
+                    <!--  buttons  -->
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+
+                    <Button
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        Text="O" />
+                    <Button
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Text="O" />
+                    <Button
+                        Grid.Row="1"
+                        Grid.Column="0"
+                        Text="O" />
+                    <Button
+                        Grid.Row="1"
+                        Grid.Column="1"
+                        Text="O" />
+                </Grid>
+            </HorizontalStackLayout>
+            <HorizontalStackLayout>
+                <!--  serial window  -->
+                <VerticalStackLayout>
+                    <Label Text="COMM" />
+                    <HorizontalStackLayout>
+                        <Picker />
+                        <Button Text="R" />
+                    </HorizontalStackLayout>
+                    <Button Text="No port selected" />
+                </VerticalStackLayout>
+                <VerticalStackLayout>
+                    <ScrollView>
+                        <Label Text="Log&#10;log&#10;log&#10;log&#10;log" />
+                    </ScrollView>
+                    <HorizontalStackLayout>
+                        <Entry />
+                        <Button Text="Send" />
+                    </HorizontalStackLayout>
+                </VerticalStackLayout>
+            </HorizontalStackLayout>
+        </HorizontalStackLayout>
+        <HorizontalStackLayout>
+            <VerticalStackLayout>
+                <Label Text="STAT" />
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                </Grid>
+            </VerticalStackLayout>
+            <VerticalStackLayout>
+                <Label Text="GRPH" />
+                <HorizontalStackLayout>
+                    <HorizontalStackLayout>
+                        <GraphicsView />
+                        <TableView>
+                            <TableRoot>
+                                <TableSection />
+                            </TableRoot>
+                        </TableView>
+                    </HorizontalStackLayout>
+                    <HorizontalStackLayout>
+                        <GraphicsView />
+                        <TableView>
+                            <TableRoot>
+                                <TableSection />
+                            </TableRoot>
+                        </TableView>
+                    </HorizontalStackLayout>
+                </HorizontalStackLayout>
+            </VerticalStackLayout>
+        </HorizontalStackLayout>
+    </VerticalStackLayout>
+
+</ContentPage>

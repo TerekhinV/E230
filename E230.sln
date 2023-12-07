@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lab3", "Lab3\Lab3.csproj", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lab4", "Lab4\Lab4.csproj", "{05235955-0242-4688-A830-79E1FA0186F9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lab6", "Lab6\Lab6.csproj", "{098A66A1-E48C-4562-9C9E-599A272FA386}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lab6", "Lab6\Lab6.csproj", "{098A66A1-E48C-4562-9C9E-599A272FA386}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SolarController", "SolarController\SolarController.csproj", "{2F9E3139-DDCB-453B-B3B0-7A78E6EDED13}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,6 +52,12 @@ Global
 		{098A66A1-E48C-4562-9C9E-599A272FA386}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{098A66A1-E48C-4562-9C9E-599A272FA386}.Release|Any CPU.Build.0 = Release|Any CPU
 		{098A66A1-E48C-4562-9C9E-599A272FA386}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{2F9E3139-DDCB-453B-B3B0-7A78E6EDED13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F9E3139-DDCB-453B-B3B0-7A78E6EDED13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F9E3139-DDCB-453B-B3B0-7A78E6EDED13}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{2F9E3139-DDCB-453B-B3B0-7A78E6EDED13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F9E3139-DDCB-453B-B3B0-7A78E6EDED13}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F9E3139-DDCB-453B-B3B0-7A78E6EDED13}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
