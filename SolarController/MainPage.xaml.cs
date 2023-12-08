@@ -3,6 +3,8 @@ using Microsoft.VisualBasic;
 using System.IO.Ports;
 using System.Runtime.CompilerServices;
 using System.Text;
+using Windows.Media.Playback;
+using Windows.Web.Http.Diagnostics;
 
 namespace SolarController
 {
@@ -18,8 +20,19 @@ namespace SolarController
             InitializeComponent();
             s = new Serial();               //init serial controller
             sol = new Solar(100, 220, 220); //init voltage/amperage calculator with according resistor values
-            volts = new Graph(gVoltage, 5); //init graphs, not fully implemented
-            amps = new Graph(gAmperage, 4);
+            volts = new Graph(gVoltage, 5, new Color[5]{
+                Color.FromArgb("ffff0000"),
+                Color.FromArgb("ffffff00"),
+                Color.FromArgb("ff00ff00"),
+                Color.FromArgb("ff0000ff"),
+                Color.FromArgb("ffff00ff")
+            }, 0, 3.5, 7, 10, "{0:0.0}V");
+            amps = new Graph(gAmperage, 4, new Color[4]{
+                Color.FromArgb("ffff0000"),
+                Color.FromArgb("ffffff00"),
+                Color.FromArgb("ff00ff00"),
+                Color.FromArgb("ff0000ff")
+            }, -5, 5, 10, 10, "{0:D1}mA");
             s.RXcallback += receiveCallback; //attach callback function to fire when serial connection receives data
         }
         public void buttonRefreshPortsClicked(object sender, EventArgs e) { //Method to refresh ports list. Gets list of names, updates menu, resets connection if one is active
@@ -117,7 +130,11 @@ namespace SolarController
             I_L0.Text = $"{sol.Il0 * 1000:00.00}mA";
             I_L1.Text = $"{sol.Il1 * 1000:00.00}mA";
 
-            //volts.pushData(sol.Vpv, sol.Vbat, sol.Vbus, sol.Vl0, sol.Vl1); //update graph history; not implemented
+            volts.push(new double?[] { sol.Vpv, sol.Vbat, sol.Vbus, sol.Vl0, sol.Vl1 });
+            amps.push(new double?[] { sol.Ipv*1000, sol.Ibat * 1000, sol.Il0 * 1000, sol.Il1 * 1000 });
+
+            volts.render();
+            amps.render();
         }
         public void updateLights(object sender, EventArgs e)
         {
@@ -226,42 +243,119 @@ namespace SolarController
         }
     }
 
-    class Graph //Graph instance that should be bound to a graphicsView. contains all relevant data to draw aforementioned graph.
+    public class Graph //Graph instance that should be bound to a graphicsView. contains all relevant data to draw aforementioned graph.
     {
         public class graphData //single series of data. Contains values in relation to time and a color to use when drawing.
         {
-            public float[] data;
+            public List<double?> data;
             public Color color;
 
-            public graphData(float[] data, Color color)
+            public graphData(Color color)
             {
-                this.data = data;
+                this.data = new List<double?>();
                 this.color = color;
             }
         }
 
         public graphData[] dataset; //array of data streams to draw on the graph
-        public long[] timestamps;   //and their corresponding timestamps
-        private int sx, sy;         //size of canvas
-        private float yMin, yMax, length; //bottom and top values for the Y axis, and length in seconds for the X axis
-        private GraphicsView graphicsView; //attached graphicsView
-        public Graph(GraphicsView view, int nSets)
+        public List<long> timestamps;   //and their corresponding timestamps
+        public string format;
+        public int divs;         //division lines
+        public double sx, sy, yMin, yMax, length; //size of canvas, bottom and top values for the Y axis, and length in seconds for the X axis
+        public GraphicsView graphicsView; //attached graphicsView
+        public Graph(GraphicsView view, int nSets, Color[] colors, double ymin, double ymax, int divisions, double length, string format) //biiiiig initializer
         {
-            //set up graph and callbacks
+            this.dataset = new graphData[nSets];
+            for (int i = 0; i < nSets; i++) dataset[i] = new graphData(colors[i]);
+            this.timestamps = new List<long>();
+            this.format = format;
+            this.divs = divisions;
+            this.sx = view.Width;
+            this.sy = view.Height;
+            this.yMin = ymin;
+            this.yMax = ymax;
+            this.length = length;
+            this.graphicsView = view;
+            this.graphicsView.SizeChanged += (object sender, EventArgs e) => { this.sx = this.graphicsView.Width; this.sy = this.graphicsView.Height; };
+            GraphicsDrawable tmp = new GraphicsDrawable();
+            tmp.graph = this;
+            this.graphicsView.Drawable = tmp;
+        }
+        public void render()
+        {
+            trim(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds() - Convert.ToInt32(length * 1000)); //trim excess data
+            graphicsView.Invalidate();
         }
 
         public void trim(long timestamp)
         {
-            //remove data older than timestamp
+            int tmp = timestamps.FindLastIndex(x => x < timestamp) + 1; //get index of last point to remove
+            timestamps.RemoveRange(0, tmp);
+            foreach(var item in this.dataset) item.data.RemoveRange(0, tmp); //remove everything up to that point
+        }
+
+        public void push(double?[] data) {
+            timestamps.Add(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds());
+            for(int i = 0; i < dataset.Length; i++) dataset[i].data.Add((i < data.Length)? data[i] : null);
         }
     }
     public class GraphicsDrawable : IDrawable
     {
-        static Graph graph;
-        static void bindGraph(Graph graph) { GraphicsDrawable.graph = graph; } //same weird binding logic as used in the balls lab since I haven't figured out MVVM yet. Main thread updates what needs to be drawn, calls this method to inject it into the Drawable context, then calls render function.
+        public Graph graph;
+        static private double map(double inp, double imin, double imax, double omin, double omax) {
+            return (inp - imin) / (imax - imin) * (omax - omin) + omin;
+        }
         public void Draw(ICanvas canvas, RectF w)
         {
-            //draw graphics using data from graph
+            if (graph is null || canvas is null) return; //seems to happen sometimes
+
+            float bLeft = 20;
+            float bTop = 10;
+            float bRight = 50;
+            float bBottom = 20;
+            float tickLength = 5;
+            canvas.FontSize = 12;
+            canvas.Font = Microsoft.Maui.Graphics.Font.Default;
+
+            //borders
+            canvas.StrokeSize = 2;
+            canvas.StrokeColor = Color.FromArgb("ff333333");
+            canvas.DrawLine(bLeft, (float)graph.sy - bBottom, (float)graph.sx - bRight, (float)graph.sy - bBottom); //horizontal
+            canvas.DrawLine((float)graph.sx - bRight, bTop, (float)graph.sx - bRight, (float)graph.sy - bBottom); //vertical
+            //tickmarks
+            canvas.DrawLine(20, (float)graph.sy - 20, 20, (float)graph.sy - 16);
+            canvas.DrawLine((float)graph.sx - 50, (float)graph.sy - 20, (float)graph.sx - 50, (float)graph.sy - 16);
+            for (int i = 0; i <= graph.divs; i++) canvas.DrawLine((float)graph.sx - 50, 10+((float)graph.sy - 30)/graph.divs*i, (float)graph.sx - 46, 10 + ((float)graph.sy - 30) / graph.divs * i);
+            //writing
+
+            //line sets
+            long now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            foreach (var data in graph.dataset)
+            {
+                PathF path = new PathF();
+                for (int i = 0; i < graph.timestamps.Count; i++) {
+                    if (data.data.ElementAt(i) is not null)
+                    {
+                        PointF loc = new PointF(
+                            (float)map(
+                                graph.timestamps.ElementAt(i),
+                                now,
+                                now - 10000,
+                                graph.sx - 50,
+                                20)
+                            , (float)map(
+                                (double)data.data.ElementAt(i),
+                                graph.yMin,
+                                graph.yMax,
+                                graph.sy - 20,
+                                10)
+                            );
+                        if (path.Count == 0) { path.MoveTo(loc); } else { path.LineTo(loc); }
+                    }
+                }
+                canvas.StrokeColor = data.color;
+                canvas.DrawPath(path);
+            }
         }
     }
 }

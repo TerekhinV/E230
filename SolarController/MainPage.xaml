@@ -27,6 +27,9 @@
         <Style TargetType="Button">
             <Setter Property="FontFamily" Value="Lucida Console Regular" />
         </Style>
+        <Style TargetType="GraphicsView">
+            <Setter Property="BackgroundColor" Value="DarkGray" />
+        </Style>
         <drawable:GraphicsDrawable x:Key="drawable" />
     </ContentPage.Resources>
     <Grid Margin="5">
@@ -155,7 +158,14 @@
                 </Grid>
             </Grid>
         </Grid>
-        <HorizontalStackLayout Grid.Row="1">
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="300" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
             <VerticalStackLayout>
                 <Label FontSize="Header" Text="STAT" />
                 <HorizontalStackLayout Spacing="20">
@@ -311,9 +321,16 @@
                     </Grid>
                 </HorizontalStackLayout>
             </VerticalStackLayout>
-            <VerticalStackLayout>
+            <Grid Grid.Column="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
                 <Label FontSize="Header" Text="GRPH" />
-                <Grid>
+                <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="*" />
@@ -325,7 +342,7 @@
                     <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="300" />
+                            <ColumnDefinition Width="200" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
@@ -337,10 +354,10 @@
                             </TableRoot>
                         </TableView>
                     </Grid>
-                    <Grid>
+                    <Grid Grid.Column="1">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
-                            <ColumnDefinition Width="300" />
+                            <ColumnDefinition Width="200" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
@@ -353,8 +370,8 @@
                         </TableView>
                     </Grid>
                 </Grid>
-            </VerticalStackLayout>
-        </HorizontalStackLayout>
+            </Grid>
+        </Grid>
     </Grid>
 
 </ContentPage>
