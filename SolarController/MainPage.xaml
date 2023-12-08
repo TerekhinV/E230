@@ -2,7 +2,8 @@
 <ContentPage
     x:Class="SolarController.MainPage"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:drawable="clr-namespace:SolarController">
     <ContentPage.Resources>
         <Style TargetType="VerticalStackLayout">
             <Setter Property="HorizontalOptions" Value="FillAndExpand" />
@@ -24,6 +25,7 @@
         <Style TargetType="Button">
             <Setter Property="FontFamily" Value="Lucida Console Regular" />
         </Style>
+        <drawable:GraphicsDrawable x:Key="drawable" />
     </ContentPage.Resources>
     <Grid Margin="5">
         <Grid.ColumnDefinitions>
@@ -83,6 +85,7 @@
                         Clicked="updateLights"
                         Text="Off" />
                 </Grid>
+                <Label Text="Notice: Lamps 3 and 4 must be off for solar panel current reading to be accurate." />
             </VerticalStackLayout>
             <Grid Grid.Column="1">
                 <Grid.ColumnDefinitions>
@@ -325,7 +328,7 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
-                        <GraphicsView />
+                        <GraphicsView x:Name="gVoltage" Drawable="{StaticResource drawable}" />
                         <TableView Grid.Column="1">
                             <TableRoot>
                                 <TableSection />
@@ -340,7 +343,7 @@
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
-                        <GraphicsView />
+                        <GraphicsView x:Name="gAmperage" Drawable="{StaticResource drawable}" />
                         <TableView Grid.Column="1">
                             <TableRoot>
                                 <TableSection />

@@ -1,6 +1,7 @@
 ﻿using Microsoft.UI.Xaml.Media.Animation;
 using Microsoft.VisualBasic;
 using System.IO.Ports;
+using System.Runtime.CompilerServices;
 using System.Text;
 
 namespace SolarController
@@ -10,12 +11,15 @@ namespace SolarController
         private Serial s;
         private Solar sol;
         private int seq, a0, a1, a2, a3, a4, a5, bin, chk;
+        private Graph volts, amps;
 
         public MainPage()
         {
             InitializeComponent();
             s = new Serial();
             sol = new Solar(100, 220, 220);
+            volts = new Graph(gVoltage, 5);
+            amps = new Graph(gAmperage, 4);
             s.RXcallback += receiveCallback;
         }
         public void buttonRefreshPortsClicked(object sender, EventArgs e) {
@@ -112,6 +116,8 @@ namespace SolarController
             I_bat.Text = $"{sol.Ibat * 1000:00.00}mA";
             I_L0.Text = $"{sol.Il0 * 1000:00.00}mA";
             I_L1.Text = $"{sol.Il1 * 1000:00.00}mA";
+
+            //volts.pushData(sol.Vpv, sol.Vbat, sol.Vbus, sol.Vl0, sol.Vl1);
         }
         public void updateLights(object sender, EventArgs e)
         {
@@ -209,14 +215,53 @@ namespace SolarController
             Vpv = a0 / 1000.0;
             Vbus = a1 / 1000.0;
             Vbat = a2 / 1000.0;
-            Vl0 = a3 / 1000.0;
-            Vl1 = a4 / 1000.0;
+            Vl1 = a3 / 1000.0;
+            Vl0 = a4 / 1000.0;
 
             Ibat = (Vbus - Vbat) / Rbat;
             Il0 = (Vbus - Vl0) / Rl0;
             Il1 = (Vbus - Vl1) / Rl1;
             Ipv = Il0 + Il1 + Ibat;
             return this;
+        }
+    }
+
+    class Graph
+    {
+        public class graphData
+        {
+            public float[] data;
+            public Color color;
+
+            public graphData(float[] data, Color color)
+            {
+                this.data = data;
+                this.color = color;
+            }
+        }
+
+        public graphData[] dataset;
+        public long[] timestamps;
+        private int sx, sy;
+        private float yMin, yMax, length;
+        private GraphicsView graphicsView;
+        public Graph(GraphicsView view, int nSets)
+        {
+            //set up graph and callbacks
+        }
+
+        public void trim(long timestamp)
+        {
+            //remove data older than timestamp
+        }
+    }
+    public class GraphicsDrawable : IDrawable
+    {
+        static Graph graph;
+        static void bindGraph(Graph graph) { GraphicsDrawable.graph = graph; }
+        public void Draw(ICanvas canvas, RectF w)
+        {
+            //draw graphics using data from graph
         }
     }
 }
