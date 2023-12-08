@@ -6,6 +6,7 @@
     xmlns:drawable="clr-namespace:SolarController">
     <ContentPage.Resources>
         <Style TargetType="VerticalStackLayout">
+            <!--  a little space between things so everything's not directly touching  -->
             <Setter Property="HorizontalOptions" Value="FillAndExpand" />
             <Setter Property="VerticalOptions" Value="FillAndExpand" />
             <Setter Property="Spacing" Value="5" />
@@ -21,6 +22,7 @@
         </Style>
         <Style TargetType="Label">
             <Setter Property="FontFamily" Value="Lucida Console Regular" />
+            <!--  monospace works way better with most things here  -->
         </Style>
         <Style TargetType="Button">
             <Setter Property="FontFamily" Value="Lucida Console Regular" />
@@ -28,6 +30,7 @@
         <drawable:GraphicsDrawable x:Key="drawable" />
     </ContentPage.Resources>
     <Grid Margin="5">
+        <!--  window  -->
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
@@ -35,7 +38,6 @@
             <RowDefinition Height="300" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <!--  window  -->
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="300" />
