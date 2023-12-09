@@ -15,6 +15,7 @@ namespace SolarController
         private Solar sol;
         private int seq, a0, a1, a2, a3, a4, a5, bin, chk;
         private Graph volts, amps;
+        private bool retry = false;
 
         public MainPage()
         {
@@ -140,29 +141,28 @@ namespace SolarController
         public void updateLights(object sender, EventArgs e)
         {
             if (sender is not null) { ((Button)sender).Text = (((Button)sender).Text == "On") ? "Off" : "On"; } //if this was called from pressing a button, apply that button action
-            string tmp = "";
-            tmp += (L0.Text == "On") ? 0 : 1; //put together string to set lights with
-            tmp += (L1.Text == "On") ? 0 : 1;
-            tmp += (L2.Text == "On") ? 0 : 1;
-            tmp += (L3.Text == "On") ? 0 : 1;
-            if (s.connected) setLights(tmp);
-        }
+            if (!s.connected && !retry) return; //end callback early if unable to send or loop is already running
 
-        public void setLights(string inp)
-        {
-            int chk = 0;
-            for (int i = 0; i < 4; i++) chk += (byte)inp[i]; //calculate checksum
-            Thread updater = new Thread(()=>updateLoop(inp, $"###{inp}{chk:D3}\r\n")); //build final packet, start the loop on a separate thread to avoid blocking
-            updater.Start();
-        }
-        private void updateLoop(string raw, string msg) //repeatedly send packets every half a second until the lights are set to what they're meant to be. Circumvents issue where packets are dropped more often than not.
-        {
-            do
+            retry = true;
+            Thread updater = new Thread(() => //on a new thread, start loop to build and send packet, repeating until lights are set correctly
             {
-                s.send(msg);
-                log("TX: " + msg);
-                Thread.Sleep(500);
-            } while (s.connected && BIN.Text != raw);
+                string tmp;
+                do
+                {
+                    tmp = (L0.Text == "On") ? "0" : "1";
+                    tmp += (L1.Text == "On") ? 0 : 1;
+                    tmp += (L2.Text == "On") ? 0 : 1;
+                    tmp += (L3.Text == "On") ? 0 : 1;
+                    int chk = 0;
+                    for (int i = 0; i < 4; i++) chk += (byte)tmp[i];
+                    string msg = $"###{tmp}{chk:D3}\r\n";
+                    s.send(msg);
+                    log("TX: " + msg);
+                    Thread.Sleep(500);
+                } while (s.connected && BIN.Text != tmp);
+                retry = false;
+            });
+            updater.Start();
         }
 
         private void log(string message)
