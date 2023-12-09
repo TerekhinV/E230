@@ -33,7 +33,7 @@ namespace SolarController
                 Color.FromArgb("ffffff00"),
                 Color.FromArgb("ff00ff00"),
                 Color.FromArgb("ff0000ff")
-            }, -5, 5, 10, 10, "{0:0}mA");
+            }, -3, 8, 11, 10, "{0:0}mA");
             s.RXcallback += receiveCallback; //attach callback function to fire when serial connection receives data
         }
         public void buttonRefreshPortsClicked(object sender, EventArgs e) { //Method to refresh ports list. Gets list of names, updates menu, resets connection if one is active
@@ -171,7 +171,7 @@ namespace SolarController
             {
                 if (!message.EndsWith("\n")) message += "\n"; //append new line to serial log.
                 logWindow.Text += message;
-                if (logWindow.Text.Length > 20000) logWindow.Text = logWindow.Text.Substring(10000, logWindow.Text.Length - 10000); //memleak prevention (seems to not solve the problem fully but adding this significantly improved how long the program can run for before crashing)
+                if (logWindow.Text.Length > 20000) logWindow.Text = ""; //trimming didn't work so we flat out delete the entire log now.
             });
         }
     }
