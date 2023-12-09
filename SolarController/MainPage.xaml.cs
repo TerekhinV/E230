@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using Windows.Media.Playback;
 using Windows.Web.Http.Diagnostics;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SolarController
 {
@@ -32,7 +33,7 @@ namespace SolarController
                 Color.FromArgb("ffffff00"),
                 Color.FromArgb("ff00ff00"),
                 Color.FromArgb("ff0000ff")
-            }, -5, 5, 10, 10, "{0:D1}mA");
+            }, -5, 5, 10, 10, "{0:0}mA");
             s.RXcallback += receiveCallback; //attach callback function to fire when serial connection receives data
         }
         public void buttonRefreshPortsClicked(object sender, EventArgs e) { //Method to refresh ports list. Gets list of names, updates menu, resets connection if one is active
@@ -312,10 +313,11 @@ namespace SolarController
             float bLeft = 20;
             float bTop = 10;
             float bRight = 50;
-            float bBottom = 20;
+            float bBottom = 30;
             float tickLength = 5;
-            canvas.FontSize = 12;
+            canvas.FontSize = 14;
             canvas.Font = Microsoft.Maui.Graphics.Font.Default;
+            canvas.FontColor = Color.FromArgb("ff333333");
 
             //borders
             canvas.StrokeSize = 2;
@@ -323,11 +325,15 @@ namespace SolarController
             canvas.DrawLine(bLeft, (float)graph.sy - bBottom, (float)graph.sx - bRight, (float)graph.sy - bBottom); //horizontal
             canvas.DrawLine((float)graph.sx - bRight, bTop, (float)graph.sx - bRight, (float)graph.sy - bBottom); //vertical
             //tickmarks
-            canvas.DrawLine(20, (float)graph.sy - 20, 20, (float)graph.sy - 16);
-            canvas.DrawLine((float)graph.sx - 50, (float)graph.sy - 20, (float)graph.sx - 50, (float)graph.sy - 16);
-            for (int i = 0; i <= graph.divs; i++) canvas.DrawLine((float)graph.sx - 50, 10+((float)graph.sy - 30)/graph.divs*i, (float)graph.sx - 46, 10 + ((float)graph.sy - 30) / graph.divs * i);
+            canvas.DrawLine(20, (float)graph.sy - bBottom, 20, (float)graph.sy - bBottom+tickLength);
+            canvas.DrawLine((float)graph.sx - 50, (float)graph.sy - bBottom, (float)graph.sx - 50, (float)graph.sy - bBottom+tickLength);
+            for (int i = 0; i <= graph.divs; i++) canvas.DrawLine((float)graph.sx - 50, bTop+((float)graph.sy - bBottom-bTop) /graph.divs*i, (float)graph.sx - 46, bTop + ((float)graph.sy - bBottom - bTop) / graph.divs * i);
+            if (Math.Sign(graph.yMin) != Math.Sign(graph.yMax)) canvas.DrawLine(bLeft, (float)map(0, graph.yMin, graph.yMax, graph.sy - bBottom, 10), (float)graph.sx - bRight, (float)map(0, graph.yMin, graph.yMax, graph.sy - bBottom, 10)); //extra line through zero if applicable
             //writing
+            canvas.DrawString("T+0", (float)graph.sx - bRight - 50, (float)graph.sy - bBottom + 10, 100, 20, HorizontalAlignment.Center, VerticalAlignment.Top);
+            canvas.DrawString($"T+{graph.length:00}s", bLeft - 50, (float)graph.sy - bBottom + 10, 100, 20, HorizontalAlignment.Center, VerticalAlignment.Top);
 
+            for (int i = 0; i <= graph.divs; i++) canvas.DrawString(string.Format(graph.format, map(i, 0, graph.divs, graph.yMin, graph.yMax)), (float)graph.sx-bRight+10, (float)map(i,0,graph.divs,graph.sy-bBottom,bTop)-10, 100, 20, HorizontalAlignment.Left, VerticalAlignment.Center);
             //line sets
             long now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
             foreach (var data in graph.dataset)
@@ -347,7 +353,7 @@ namespace SolarController
                                 (double)data.data.ElementAt(i),
                                 graph.yMin,
                                 graph.yMax,
-                                graph.sy - 20,
+                                graph.sy - bBottom,
                                 10)
                             );
                         if (path.Count == 0) { path.MoveTo(loc); } else { path.LineTo(loc); }
