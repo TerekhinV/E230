@@ -38,7 +38,8 @@ namespace Lab6
                 double m;
                 if (int.TryParse(nBalls.Text, out n))
                 {
-                    Array.Resize(ref balls, n);
+                    limit = n;
+                    Array.Resize(ref balls, limit);
                     for (int i = 0; i < balls.Length; i++) if (balls[i] == null) balls[i] = new Ball(); //resize array, fill gaps, send new array ref to draw function
                     GraphicsDrawable.bindArray(balls);
                 };

@@ -5,7 +5,6 @@ internal class Program
     private static void Main(string[] args)
     {
         double a, b, res;
-        Calculator calc = new Calculator();
 
         Console.WriteLine("C# console calculator\n");
         do{//main loop
@@ -30,8 +29,8 @@ internal class Program
             } while (Double.IsNaN(b));
             
             while(true){//same but different for op
-                Console.WriteLine("Enter op (+|-|*|/|^|root):");
-                res = calc.doOp(a, b, Console.ReadLine() ?? "");
+                Console.WriteLine("Enter op (+|-|*|/|^):");
+                res = Calculator.doOp(a, b, Console.ReadLine() ?? "");
                 if (!Double.IsNaN(res)) break;
                 Console.Write("Invalid input; ");
             }
@@ -40,6 +39,5 @@ internal class Program
 
             Console.WriteLine("Exit? (y|n)");
         } while ((Console.ReadLine() ?? "").Equals("n")); //check for exit
-        calc.Finish();
     }
 }
