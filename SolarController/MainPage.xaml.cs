@@ -6,6 +6,7 @@ using System.Text;
 using Windows.Media.Playback;
 using Windows.Web.Http.Diagnostics;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Timers;
 
 namespace SolarController
 {
@@ -16,6 +17,7 @@ namespace SolarController
         private int seq, a0, a1, a2, a3, a4, a5, bin, chk;
         private Graph volts, amps;
         private bool retry = false;
+        private System.Timers.Timer t;
 
         public MainPage()
         {
@@ -36,6 +38,14 @@ namespace SolarController
                 Color.FromArgb("ff0000ff")
             }, -3, 8, 11, 10, "{0:0}mA");
             s.RXcallback += receiveCallback; //attach callback function to fire when serial connection receives data
+            t = new System.Timers.Timer(); //60FPS graph render thread
+            t.Interval = 1000f / 60f;
+            t.Elapsed += (object s, ElapsedEventArgs e) =>
+            {
+                volts.render();
+                amps.render();
+            };
+            t.Start();
         }
         public void buttonRefreshPortsClicked(object sender, EventArgs e) { //Method to refresh ports list. Gets list of names, updates menu, resets connection if one is active
             try
@@ -54,6 +64,7 @@ namespace SolarController
             if (serialDropdown.SelectedIndex == -1) return; //this event also fires when the menu is cleared and has no valid values, this prevents errors when that occurs
             log($"Selected port {serialDropdown.ItemsSource[serialDropdown.SelectedIndex]}");
             s.resetPort((string)serialDropdown.ItemsSource[serialDropdown.SelectedIndex]);
+            log("Disconnected");
             connectButton.Text = "Connect";
         }
         public void buttonPortConnectClicked(object sender, EventArgs e) { //connect/disconnect serial port handler
@@ -61,11 +72,13 @@ namespace SolarController
             if (s.connected)
             {
                 s.disconnect();
+                log("Disconnected");
                 connectButton.Text = "Connect";
             } else
             {
                 s.connect();
                 connectButton.Text = "Disconnect";
+                log("Connected");
                 updateLights(null, null); //update LEDs on connection
             }
         }
@@ -74,7 +87,7 @@ namespace SolarController
             try
             {
                 s.send(TXentry.Text + "\r\n");
-                log("TX: " + TXentry.Text);
+                //log("TX: " + TXentry.Text);
             }
             catch (Exception ex) { log(ex.Message); }
         }
@@ -82,7 +95,7 @@ namespace SolarController
             string tmp = s.line();
             MainThread.BeginInvokeOnMainThread(() => //invoke everything on main thread as other threads cannot update the UI
             {
-                log("RX: " + tmp);
+                //log("RX: " + tmp);
                 parse(tmp);
             });
         }
@@ -104,7 +117,7 @@ namespace SolarController
                     bin = Convert.ToInt32(inp.Substring(30, 4));
                     chk = tmp % 1000;
                     updateVals();
-                }
+                } else { log("Invalid packet received: " + inp); }
             }
         }
         public void updateVals()
@@ -134,14 +147,12 @@ namespace SolarController
 
             volts.push(new double?[] { sol.Vpv, sol.Vbat, sol.Vbus, sol.Vl0, sol.Vl1 });
             amps.push(new double?[] { sol.Ipv*1000, sol.Ibat * 1000, sol.Il0 * 1000, sol.Il1 * 1000 });
-
-            volts.render();
-            amps.render();
         }
         public void updateLights(object sender, EventArgs e)
         {
             if (sender is not null) { ((Button)sender).Text = (((Button)sender).Text == "On") ? "Off" : "On"; } //if this was called from pressing a button, apply that button action
-            if (!s.connected && !retry) return; //end callback early if unable to send or loop is already running
+            log($"Lights configuration updated: {L0.Text}, {L1.Text}, {L2.Text}, {L3.Text}");
+            if (!s.connected || retry) return; //end callback early if unable to send or loop is already running
 
             retry = true;
             Thread updater = new Thread(() => //on a new thread, start loop to build and send packet, repeating until lights are set correctly
@@ -157,10 +168,11 @@ namespace SolarController
                     for (int i = 0; i < 4; i++) chk += (byte)tmp[i];
                     string msg = $"###{tmp}{chk:D3}\r\n";
                     s.send(msg);
-                    log("TX: " + msg);
+                    //log("TX: " + msg);
                     Thread.Sleep(500);
                 } while (s.connected && BIN.Text != tmp);
                 retry = false;
+                log("Succeeded setting lights");
             });
             updater.Start();
         }
